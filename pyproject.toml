@@ -4,7 +4,6 @@ requires = [
     "hatch-vcs>=0.3.0",
 ]
 build-backend = "hatchling.build"
-...
 
 [project]
 name = "pillager"
@@ -13,15 +12,18 @@ description = "Example package for demonstration"
 readme = "README.md"
 license = { text = "BSD-3-Clause" }  # SPDX short identifier
 authors = [
-  { name = "Quinton J. Williams", email = "williamq@oregonstate.edu" },
+  { name = "Quinton J. Williams", email = "qscorp97@gmail.com" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.13"
 
 dependencies = [
     "scipy>=1.6.0",
-    "numpy",  # compatible versions controlled through scipy
+    "numpy>=2.2.1",  
+    "os".
+    "subprocess",
+    "csv",
+    "pandas"
 ]
-...
 
 [tool.hatch.version]
 source = "vcs"
@@ -33,4 +35,3 @@ root = ".."
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/pillager/_version.py"
-...

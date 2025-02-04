@@ -7,35 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- 
-
-### Changed
-
-- 
-
-### Removed
-
-- 
 
 ## [0.0.1] - 2025-02-04
 
 ### Added
 
-- 
-
-### Fixed
-
-- 
-
-### Changed
-
-- 
-
-### Removed
-
-- 
+- Working hardcoded version of pillager which conducts coupled criticality search-burnup operations with a Serpent file.
 
 
 [unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.1...HEAD

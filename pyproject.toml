@@ -17,11 +17,7 @@ authors = [
 requires-python = ">=3.13"
 
 dependencies = [
-    "scipy>=1.6.0",
     "numpy>=2.2.1",  
-    "os".
-    "subprocess",
-    "csv",
     "pandas"
 ]
 
@@ -31,7 +27,7 @@ source = "vcs"
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version"
 # Need to give root as we aren't at the same level as the git repo
-root = ".."
+root = "."
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/pillager/_version.py"

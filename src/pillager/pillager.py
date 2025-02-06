@@ -7,9 +7,13 @@ import csv
 
 # %%
 class Pillager():
-    '''
+    """ 
+    Class for conducting coupled criticality search-burnup calculations in the Serpent 2 radiation transport code. 
 
-    '''
+    Individual functions can also be used to conduct variable search using secant, regressive secant, or generalized 
+    regressive secant methods.
+
+    """
     def __init__(self):
         self.output_dir = './'
         self.input_base = 'serpent_base.i'
@@ -18,9 +22,9 @@ class Pillager():
         self.generations = 160
         self.skipped_gens = 40
         self.target = 1
-        self.retained_values = 3
+        self.retained_values = 2
         self.err_tol = 1e-5
-        self.var_tol = None
+        self.var_tol = 1
         self.burnup_steps = [0.1,0.5,1]
         self.burnup_type = 'daytot'
         self.xbounds = [0,180]
@@ -34,46 +38,62 @@ class Pillager():
         #self.move_files = True
         #self.file_blacklist = [self.input_base,self.control_base]
 
-    def crit_search(self,kwarg=['min','max'],kwarg_search='search'):
-        tar = 1.0
-        R = 3
-        errK = 0.0005
-        chgTheta = 1
-        
-        thetas = [0,180]
-        self.write_serpent(thetas[0],100000,kwarg=kwarg[0])
+    def run_search(self,kwarg=['min','max'],kwarg_search='search'):
+        """
+
+        """
+        thetas = self.xbounds
+        self.write_serpent(thetas[0],self.particles,kwarg=kwarg[0])
         self.run_serpent()
-        k_min, sdev = self.get_eigenvalue('serpent.i_res.m')
-        fun = [float(k_min)-tar]
+        k_min, sdev = self.get_eigenvalue()
+        fun = [float(k_min) - self.target]
         sigmas = [float(sdev)**2]
         
-        self.write_serpent(thetas[1],100000,kwarg=kwarg[1])
+        self.write_serpent(thetas[1],self.particles,kwarg=kwarg[1])
         self.run_serpent()
-        k_max, sdev = self.get_eigenvalue('serpent.i_res.m')
-        fun.append(float(k_max)-tar)
+        k_max, sdev = self.get_eigenvalue()
+        fun.append(float(k_max) - self.target)
         sigmas.append(float(sdev)**2)
-        
+
         iteration = 0
-        while (abs(fun[-1]) > errK or abs(thetas[-1]-thetas[-2]) > chgTheta) and iteration < 6:
-            iteration += 1
+        if self.generalized_search:
+            while (abs(fun[-1]) > self.err_tol or abs(thetas[-1] - thetas[-2]) > self.var_tol) and iteration < 6:
+                iteration += 1
 
+                thetas.append(self.generalized_regressive_secant(thetas,sigmas,fun))
+                if iteration < 4:
+                    self.write_serpent(thetas[-1],self.particles/10,kwarg=kwarg_search)
+                else:
+                    self.write_serpent(thetas[-1],self.particles,kwarg=kwarg_search)
+                self.run_serpent()
+                keff, sdev = self.get_eigenvalue()
 
-            self.GRsecant(thetas,sigmas,fun,R)
-            if iteration < 4:
-                self.write_serpent(thetas[-1],10000,kwarg=kwarg_search)
-            else:
-                self.write_serpent(thetas[-1],100000,kwarg=kwarg_search)
-            self.run_serpent()
-            keff, sdev = self.get_eigenvalue('serpent.i_res.m')
+                fun.append(float(keff) - self.target)
+                sigmas.append(float(sdev)**2)
+            k_crit = fun[-1] + self.target
+            angle = thetas[-1]
+        else:
+            while (abs(fun[-1]) > self.err_tol or abs(thetas[-1] - thetas[-2]) > self.var_tol) and iteration < 6:
+                iteration += 1
 
-            fun.append(float(keff)-tar)
-            sigmas.append(float(sdev)**2)
-        k_crit = fun[-1] + tar
-        angle = thetas[-1]
+                thetas.append(self.regressive_secant(thetas,fun))
+                if iteration < 4:
+                    self.write_serpent(thetas[-1],self.particles/10,kwarg=kwarg_search)
+                else:
+                    self.write_serpent(thetas[-1],self.particles,kwarg=kwarg_search)
+                self.run_serpent()
+                keff, sdev = self.get_eigenvalue()
+
+                fun.append(float(keff) - self.target)
+            k_crit = fun[-1] + self.target
+            angle = thetas[-1]
         
         return k_max, k_min, k_crit, angle
 
-    def Rsecant(self,xs,fs):    # Updated to conform to class format
+    def regressive_secant(self,xs,fs):    # Updated to conform to class format
+        """
+
+        """
         R = self.retained_values
         if R >= len(fs):
             x_new = (np.sum(xs)*np.sum(np.multiply(fs,xs)) - np.sum(np.square(xs))*np.sum(fs)) / ((2+R)*np.sum(np.multiply(fs,xs)) - np.sum(fs)*np.sum(xs))
@@ -81,7 +101,10 @@ class Pillager():
             x_new = (np.sum(xs[-R:])*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(np.square(xs[-R:]))*np.sum(fs[-R:])) / ((2+R)*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(fs[-R:])*np.sum(xs[-R:])) 
         return x_new
 
-    def GRsecant(self,xs,sigs,fs):  # Updated to conform to class format
+    def generalized_regressive_secant(self,xs,sigs,fs):  # Updated to conform to class format
+        """
+
+        """
         R = self.retained_values
         if R >= len(fs):
             x_new = (np.sum(np.divide(xs,sigs))*np.sum(np.divide(np.multiply(fs,xs),sigs)) - np.sum(np.divide(np.square(xs),sigs))*np.sum(np.divide(fs,sigs))) / (np.sum(np.divide(np.multiply(fs,xs),sigs))*np.sum(np.reciprocal(sigs)) - np.sum(np.divide(fs,sigs))*np.sum(np.divide(xs,sigs)))
@@ -90,6 +113,9 @@ class Pillager():
         return x_new
 
     def get_eigenvalue(self):   # Updated to conform to class format
+        """
+
+        """
         file = open(self.output_dir+'serpent.i_res.m')
         data = file.readlines()
         file.close()
@@ -101,9 +127,12 @@ class Pillager():
                 sdev = all[-2]
         return keff, sdev
 
-    def power_grab(self,file):
+    def get_detector_values(self,file_name):
+        """
+
+        """
         #Open the file, read it, and close it
-        file = open(file)
+        file = open(self.output_dir + file_name)
         data = file.readlines()
 
         file.close()
@@ -263,6 +292,9 @@ class Pillager():
         return df
         
     def write_serpent(self,x,particles,kwarg,step=0):   # Updated to conform to class format
+        """
+
+        """
         with open(self.input_base,'r', encoding='utf-8') as f:
             with open('serpent.i','w', encoding='utf-8') as n:
                 for line in f:
@@ -306,14 +338,34 @@ class Pillager():
                 n.write('set rfr continue \"serpent.i.wrk\" \n')
 
     def run_serpent(self):  # Updated to conform to class format
+        """
+
+        """
         cmd = ['sss2', 'serpent.i', '-omp', str(self.nOMP)]
         subprocess.run(cmd,shell=False)
         return
 
+    def move_files(self):
+        """
+
+        """
+        pass
+
+    def pillage(self):
+        """
+
+        """
+        pass
+
 data_storage = pd.DataFrame.from_dict({'Day':[],'Configuration':[],'keff':[],'CD Angle':[]})
 # %%
-# Conduct initial search
+# Functionality Test
 
+problem = Pillager()
+problem.input_base = 'serpent.i'
+df = problem.get_detector_values('serpent.i_det0.m')
+print(df)
+'''
 days = [0.5,1,31,61,91,121,151,181,211,241,271,301,331,365,395,425,455,485,500,501]
 
 k_max, k_min, k_crit, angle = crit_search(kwarg=['initial','initial'],kwarg_search='initial')
@@ -377,3 +429,4 @@ entry = pd.concat([entry,pd.DataFrame.from_dict({'Day':[days[-1],days[-1]],'Conf
 os.rename('serpent.i_det1.m','day'+str(days[-1])+'/serpent.i_det1.m')
 data_storage = pd.concat([data_storage,entry],ignore_index=True)
 data_storage.to_csv('burnup_eigenvalues.csv',index=False)
+'''

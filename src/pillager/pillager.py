@@ -11,6 +11,7 @@ class Pillager():
 
     '''
     def __init__(self):
+        self.output_dir = './'
         self.input_base = 'serpent_base.i'
         self.control_base = 'control.i'
         self.particles = 1e5
@@ -27,10 +28,11 @@ class Pillager():
         self.generalized_search = True
         self.nOMP = 48
         self.silent = True
+        #self.x0 = None
         #self.y0 = None
         #self.sigma0 = None
         #self.move_files = True
-        #self.file_blacklist = []
+        #self.file_blacklist = [self.input_base,self.control_base]
 
     def crit_search(self,kwarg=['min','max'],kwarg_search='search'):
         tar = 1.0
@@ -71,7 +73,7 @@ class Pillager():
         
         return k_max, k_min, k_crit, angle
 
-    def Rsecant(self,xs,fs):
+    def Rsecant(self,xs,fs):    # Updated to conform to class format
         R = self.retained_values
         if R >= len(fs):
             x_new = (np.sum(xs)*np.sum(np.multiply(fs,xs)) - np.sum(np.square(xs))*np.sum(fs)) / ((2+R)*np.sum(np.multiply(fs,xs)) - np.sum(fs)*np.sum(xs))
@@ -79,7 +81,7 @@ class Pillager():
             x_new = (np.sum(xs[-R:])*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(np.square(xs[-R:]))*np.sum(fs[-R:])) / ((2+R)*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(fs[-R:])*np.sum(xs[-R:])) 
         return x_new
 
-    def GRsecant(self,xs,sigs,fs):
+    def GRsecant(self,xs,sigs,fs):  # Updated to conform to class format
         R = self.retained_values
         if R >= len(fs):
             x_new = (np.sum(np.divide(xs,sigs))*np.sum(np.divide(np.multiply(fs,xs),sigs)) - np.sum(np.divide(np.square(xs),sigs))*np.sum(np.divide(fs,sigs))) / (np.sum(np.divide(np.multiply(fs,xs),sigs))*np.sum(np.reciprocal(sigs)) - np.sum(np.divide(fs,sigs))*np.sum(np.divide(xs,sigs)))
@@ -87,8 +89,8 @@ class Pillager():
             x_new = (np.sum(np.divide(xs[-R:],sigs[-R:]))*np.sum(np.divide(np.multiply(fs[-R:],xs[-R:]),sigs[-R:])) - np.sum(np.divide(np.square(xs[-R:]),sigs[-R:]))*np.sum(np.divide(fs[-R:],sigs[-R:]))) / (np.sum(np.divide(np.multiply(fs[-R:],xs[-R:]),sigs[-R:]))*np.sum(np.reciprocal(sigs[-R:])) - np.sum(np.divide(fs[-R:],sigs[-R:]))*np.sum(np.divide(xs[-R:],sigs[-R:]))) 
         return x_new
 
-    def get_eigenvalue(self,filePath):
-        file = open(filePath)
+    def get_eigenvalue(self):   # Updated to conform to class format
+        file = open(self.output_dir+'serpent.i_res.m')
         data = file.readlines()
         file.close()
         for line in data:
@@ -260,82 +262,50 @@ class Pillager():
         os.remove('flux_dat.csv')
         return df
         
-    def write_serpent(self,angle,particles,kwarg,day=0):
-        with open('serpent_base.i','r', encoding='utf-8') as f:
+    def write_serpent(self,x,particles,kwarg,step=0):   # Updated to conform to class format
+        with open(self.input_base,'r', encoding='utf-8') as f:
             with open('serpent.i','w', encoding='utf-8') as n:
                 for line in f:
                     n.write(line)
-                n.write('\n')
-                n.write('set pop '+str(particles)+' 160 40')
-                n.write('\n')
-                n.write('set bc 1')
-                n.write('\n')
-                n.write('set opti 3')
-                n.write('\n')
-                n.write('set nbuf 100')
-                n.write('\n')
-                n.write('set memfrac 0.9')
-                n.write('\n')
-                n.write('surf 94 pad 0.0 0.0 14.0 15.0 '+str(300.0+180-angle)+' '+str(60.0+180-angle))
-                n.write('\n')
-                n.write('surf 95 pad 0.0 0.0 14.0 15.0 '+str(240.0+180-angle)+' '+str(0.0+180-angle))
-                n.write('\n')
-                n.write('surf 96 pad 0.0 0.0 14.0 15.0 '+str(240.0+180-angle)+' '+str(0.0+180-angle))
-                n.write('\n')
-                n.write('surf 97 pad 0.0 0.0 14.0 15.0 '+str(180.0+180-angle)+' '+str(-60.0+180-angle))
-                n.write('\n')
-                n.write('surf 98 pad 0.0 0.0 14.0 15.0 '+str(180.0+180-angle)+' '+str(-60.0+180-angle))
-                n.write('\n')
-                n.write('surf 99 pad 0.0 0.0 14.0 15.0 '+str(120.0+180-angle)+' '+str(-120.0+180-angle))
-                n.write('\n')
-                n.write('surf 100 pad 0.0 0.0 14.0 15.0 '+str(120.0+180-angle)+' '+str(-120.0+180-angle))
-                n.write('\n')
-                n.write('surf 101 pad 0.0 0.0 14.0 15.0 '+str(60.0+180-angle)+' '+str(-180.0+180-angle))
-                n.write('\n')
-                n.write('surf 102 pad 0.0 0.0 14.0 15.0 '+str(60.0+180-angle)+' '+str(-180.0+180-angle))
-                n.write('\n')
-                n.write('surf 103 pad 0.0 0.0 14.0 15.0 '+str(0.0+180-angle)+' '+str(-240.0+180-angle))
-                n.write('\n')
-                n.write('surf 104 pad 0.0 0.0 14.0 15.0 '+str(0.0+180-angle)+' '+str(-240.0+180-angle))
-                n.write('\n')
-                n.write('surf 105 pad 0.0 0.0 14.0 15.0 '+str(300.0+180-angle)+' '+str(60.0+180-angle))
-                n.write('\n')
+                n.write(f'\n set pop {particles} {self.generations} {self.skipped_gens} \n')
+                n.write('set bc 1 \n')
+                n.write('set opti 3 \n')
+                n.write('set nbuf 100 \n')
+                n.write('set memfrac 0.9 \n')
+                n.write(f'surf 94 pad 0.0 0.0 14.0 15.0 {300.0+180-x} {60.0+180-x} \n')
+                n.write(f'surf 95 pad 0.0 0.0 14.0 15.0 {240.0+180-x} {0.0+180-x} \n')
+                n.write(f'surf 96 pad 0.0 0.0 14.0 15.0 {240.0+180-x} {0.0+180-x} \n')
+                n.write(f'surf 97 pad 0.0 0.0 14.0 15.0 {180.0+180-x} {-60.0+180-x} \n')
+                n.write(f'surf 98 pad 0.0 0.0 14.0 15.0 {180.0+180-x} {-60.0+180-x} \n')
+                n.write(f'surf 99 pad 0.0 0.0 14.0 15.0 {120.0+180-x} {-120.0+180-x} \n')
+                n.write(f'surf 100 pad 0.0 0.0 14.0 15.0 {120.0+180-x} {-120.0+180-x} \n')
+                n.write(f'surf 101 pad 0.0 0.0 14.0 15.0 {60.0+180-x} {-180.0+180-x} \n')
+                n.write(f'surf 102 pad 0.0 0.0 14.0 15.0 {60.0+180-x} {-180.0+180-x} \n')
+                n.write(f'surf 103 pad 0.0 0.0 14.0 15.0 {0.0+180-x} {-240.0+180-x} \n')
+                n.write(f'surf 104 pad 0.0 0.0 14.0 15.0 {0.0+180-x} {-240.0+180-x} \n')
+                n.write(f'surf 105 pad 0.0 0.0 14.0 15.0 {300.0+180-x} {60.0+180-x} \n')
         with open('serpent.i','a', encoding='utf-8') as n:
             if kwarg == 'initial':
                 pass
             elif kwarg == 'initialBurn':
-                n.write('set mcvol 10000000')
-                n.write('\n')
-                n.write('set rfw 1')
-                n.write('\n')
-                n.write('set depout 3')
-                n.write('\n')
-                n.write('set printm 1')
-                n.write('\n')
-                n.write('dep daytot')
-                n.write('\n')
-                n.write(str(day))
-                n.write('\n')
+                n.write('set mcvol 10000000 \n')
+                n.write('set rfw 1 \n')
+                n.write('set depout 3 \n')
+                n.write('set printm 1 \n')
+                n.write(f'dep {self.burnup_type} \n')
+                n.write(f' {step} \n')
             elif kwarg == 'burn':
-                n.write('set mcvol 10000000')
-                n.write('\n')
-                n.write('set rfw 1')
-                n.write('\n')
-                n.write('set rfr continue \"serpent.i.wrk\"')
-                n.write('\n')
-                n.write('set depout 3')
-                n.write('\n')
-                n.write('set printm 1')
-                n.write('\n')
-                n.write('dep daytot')
-                n.write('\n')
-                n.write(str(day))
-                n.write('\n')
+                n.write('set mcvol 10000000 \n')
+                n.write('set rfw 1 \n')
+                n.write('set rfr continue \"serpent.i.wrk\" \n')
+                n.write('set depout 3 \n')
+                n.write('set printm 1 \n')
+                n.write(f'dep {self.burnup_type} \n')
+                n.write(f' {step} \n')
             else:
-                n.write('set rfr continue \"serpent.i.wrk\"')
-                n.write('\n')
+                n.write('set rfr continue \"serpent.i.wrk\" \n')
 
-    def run_serpent(self):
+    def run_serpent(self):  # Updated to conform to class format
         cmd = ['sss2', 'serpent.i', '-omp', str(self.nOMP)]
         subprocess.run(cmd,shell=False)
         return

@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [0.0.2] - 2025-03-04
+
+### Added
+
+- Documentation generation.
+- Basic testing suite.
+
+### Changed
+
+- Changed hard coded format of pillager.py to class format.
+
 ## [0.0.1] - 2025-02-04
 
 ### Added

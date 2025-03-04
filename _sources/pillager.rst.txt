@@ -1,1 +1,1 @@
-.. automodule:: src.pillager.pillager
+.. automodule:: src.pillager.pillager :members:

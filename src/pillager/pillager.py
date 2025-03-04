@@ -36,20 +36,26 @@ class Pillager():
         #self.y0 = None
         #self.sigma0 = None
         #self.move_files = True
-        #self.file_blacklist = [self.input_base,self.control_base]
+        self.file_blacklist = [self.input_base,self.control_base,'serpent.i.wrk']
 
-    def run_search(self,kwarg=['min','max'],kwarg_search='search'):
+    def blacklist_dir_files(self):
         """
+        Designates current directory files as blacklisted from movement.
+        """
+        return self.file_blacklist.append(os.listdir(self.output_dir))
 
+    def run_search(self,config):    # Updated to conform to class format
+        """
+        Conducts criticality search.
         """
         thetas = self.xbounds
-        self.write_serpent(thetas[0],self.particles,kwarg=kwarg[0])
+        self.write_serpent(thetas[0],self.particles,config=config)
         self.run_serpent()
         k_min, sdev = self.get_eigenvalue()
         fun = [float(k_min) - self.target]
         sigmas = [float(sdev)**2]
         
-        self.write_serpent(thetas[1],self.particles,kwarg=kwarg[1])
+        self.write_serpent(thetas[1],self.particles,config=config)
         self.run_serpent()
         k_max, sdev = self.get_eigenvalue()
         fun.append(float(k_max) - self.target)
@@ -62,9 +68,9 @@ class Pillager():
 
                 thetas.append(self.generalized_regressive_secant(thetas,sigmas,fun))
                 if iteration < 4:
-                    self.write_serpent(thetas[-1],self.particles/10,kwarg=kwarg_search)
+                    self.write_serpent(thetas[-1],self.particles/10,config=config)
                 else:
-                    self.write_serpent(thetas[-1],self.particles,kwarg=kwarg_search)
+                    self.write_serpent(thetas[-1],self.particles,config=config)
                 self.run_serpent()
                 keff, sdev = self.get_eigenvalue()
 
@@ -78,9 +84,9 @@ class Pillager():
 
                 thetas.append(self.regressive_secant(thetas,fun))
                 if iteration < 4:
-                    self.write_serpent(thetas[-1],self.particles/10,kwarg=kwarg_search)
+                    self.write_serpent(thetas[-1],self.particles/10,config=config)
                 else:
-                    self.write_serpent(thetas[-1],self.particles,kwarg=kwarg_search)
+                    self.write_serpent(thetas[-1],self.particles,config=config)
                 self.run_serpent()
                 keff, sdev = self.get_eigenvalue()
 
@@ -88,11 +94,11 @@ class Pillager():
             k_crit = fun[-1] + self.target
             angle = thetas[-1]
         
-        return k_max, k_min, k_crit, angle
+        return [k_max, k_min, k_crit, angle]
 
     def regressive_secant(self,xs,fs):    # Updated to conform to class format
         """
-
+        Conducts a regressive secant evaluation to find next input value.
         """
         R = self.retained_values
         if R >= len(fs):
@@ -103,7 +109,7 @@ class Pillager():
 
     def generalized_regressive_secant(self,xs,sigs,fs):  # Updated to conform to class format
         """
-
+        Conducts a generalized regressive secant evaluation to find next input value.
         """
         R = self.retained_values
         if R >= len(fs):
@@ -114,7 +120,7 @@ class Pillager():
 
     def get_eigenvalue(self):   # Updated to conform to class format
         """
-
+        Gets implicit eigenvalue from Serpent results output file.
         """
         file = open(self.output_dir+'serpent.i_res.m')
         data = file.readlines()
@@ -129,7 +135,7 @@ class Pillager():
 
     def get_detector_values(self,file_name):
         """
-
+        Gets detector values from Serpent simulation detector output file.
         """
         #Open the file, read it, and close it
         file = open(self.output_dir + file_name)
@@ -291,9 +297,9 @@ class Pillager():
         os.remove('flux_dat.csv')
         return df
         
-    def write_serpent(self,x,particles,kwarg,step=0):   # Updated to conform to class format
+    def write_serpent(self,x,particles,config,step=0):   # Updated to conform to class format
         """
-
+        Writes serpent input files.
         """
         with open(self.input_base,'r', encoding='utf-8') as f:
             with open('serpent.i','w', encoding='utf-8') as n:
@@ -317,16 +323,16 @@ class Pillager():
                 n.write(f'surf 104 pad 0.0 0.0 14.0 15.0 {0.0+180-x} {-240.0+180-x} \n')
                 n.write(f'surf 105 pad 0.0 0.0 14.0 15.0 {300.0+180-x} {60.0+180-x} \n')
         with open('serpent.i','a', encoding='utf-8') as n:
-            if kwarg == 'initial':
+            if config == 'initial':
                 pass
-            elif kwarg == 'initialBurn':
+            elif config == 'initialBurn':
                 n.write('set mcvol 10000000 \n')
                 n.write('set rfw 1 \n')
                 n.write('set depout 3 \n')
                 n.write('set printm 1 \n')
                 n.write(f'dep {self.burnup_type} \n')
                 n.write(f' {step} \n')
-            elif kwarg == 'burn':
+            elif config == 'burn':
                 n.write('set mcvol 10000000 \n')
                 n.write('set rfw 1 \n')
                 n.write('set rfr continue \"serpent.i.wrk\" \n')
@@ -339,23 +345,52 @@ class Pillager():
 
     def run_serpent(self):  # Updated to conform to class format
         """
-
+        Runs the generated serpent input file.
         """
         cmd = ['sss2', 'serpent.i', '-omp', str(self.nOMP)]
         subprocess.run(cmd,shell=False)
         return
 
-    def move_files(self):
+    def move_files(self,step=0):
         """
-
+        Moves generated input and output files for a given timestep.
         """
-        pass
+        os.makedirs(f'day{step}',exist_ok=True)
+        contents = os.listdir(self.output_dir)
+        for name in contents:
+            if name not in self.file_blacklist:
+                os.rename(name,f'day{step}/{name}')
+        return
 
     def pillage(self):
         """
-
+        Conducts a full coupled criticality search-burnup calculation over the designated burnup steps.
         """
-        pass
+        data_storage = pd.DataFrame.from_dict({'Day':[],'k_max':[],'k_min':[],'k_crit':[],'CD Angle':[]})
+        eigenvalues = self.run_search('initial')
+        entry = pd.DataFrame.from_dict({'Day':[0],'k_max':[eigenvalues[0]],'k_min':[eigenvalues[1]],'k_crit':[eigenvalues[2]],'CD Angle':[eigenvalues[3]]})
+        entry = pd.concat([entry,self.get_detector_values('serpent.i_det0.m')],axis=1)
+        data_storage = pd.concat([data_storage,entry],ignore_index=True)
+        data_storage.to_csv('outputs.csv',index=False)
+        self.move_files()
+        self.write_serpent(eigenvalues[-1],self.particles,'initialBurn',step=self.burnup_steps[0])
+        self.run_serpent()
+        for i in range(len(self.burnup_steps)-1):
+            eigenvalues = self.run_search('')
+            entry = pd.DataFrame.from_dict({'Day':[self.burnup_steps[i]],'k_max':[eigenvalues[0]],'k_min':[eigenvalues[1]],'k_crit':[eigenvalues[2]],'CD Angle':[eigenvalues[3]]})
+            entry = pd.concat([entry,self.get_detector_values('serpent.i_det1.m')],axis=1)
+            data_storage = pd.concat([data_storage,entry],ignore_index=True)
+            data_storage.to_csv('outputs.csv',index=False)
+            self.move_files()
+            self.write_serpent(eigenvalues[-1],self.particles,'burn',step=self.burnup_steps[i+1])
+            self.run_serpent()
+        eigenvalues = self.run_search('')
+        entry = pd.DataFrame.from_dict({'Day':[self.burnup_steps[-1]],'k_max':[eigenvalues[0]],'k_min':[eigenvalues[1]],'k_crit':[eigenvalues[2]],'CD Angle':[eigenvalues[3]]})
+        entry = pd.concat([entry,self.get_detector_values('serpent.i_det1.m')],axis=1)
+        data_storage = pd.concat([data_storage,entry],ignore_index=True)
+        data_storage.to_csv('outputs.csv',index=False)
+        self.move_files()
+        return
 
 data_storage = pd.DataFrame.from_dict({'Day':[],'Configuration':[],'keff':[],'CD Angle':[]})
 # %%
@@ -365,68 +400,3 @@ problem = Pillager()
 problem.input_base = 'serpent.i'
 df = problem.get_detector_values('serpent.i_det0.m')
 print(df)
-'''
-days = [0.5,1,31,61,91,121,151,181,211,241,271,301,331,365,395,425,455,485,500,501]
-
-k_max, k_min, k_crit, angle = crit_search(kwarg=['initial','initial'],kwarg_search='initial')
-
-os.makedirs('day0',exist_ok=True)
-contents = os.listdir()
-for name in contents:
-    if ('.png' in name) and ('bstep0' not in name):
-        os.rename(name,'day0/'+name)
-os.rename('serpent.i','day0/serpent.i')
-os.rename('serpent.i_res.m','day0/serpent.i_res.m')
-entry = pd.DataFrame.from_dict({'Day':[0],'Configuration':['Critical'],'keff':[k_crit],'CD Angle':[angle]})
-entry = pd.concat([entry,power_grab('serpent.i_det0.m')],axis=1)
-entry = pd.concat([entry,pd.DataFrame.from_dict({'Day':[0,0],'Configuration':['In','Out'],'keff':[k_min,k_max],'CD Angle':[0,180]})],ignore_index=True)
-os.rename('serpent.i_det0.m','day0/serpent.i_det0.m')
-data_storage = pd.concat([data_storage,entry],ignore_index=True)
-data_storage.to_csv('burnup_eigenvalues.csv',index=False)
-
-
-# Conduct initial burn
-
-write_serpent(angle,100000,kwarg='initialBurn',day=days[0])
-run_serpent()
-
-# Iterate Max, Min, Search, Burn
-
-for i in range(len(days)-1):
-
-    k_max, k_min, k_crit, angle = crit_search()
-    
-    os.makedirs('day'+str(days[i]),exist_ok=True)
-    contents = os.listdir()
-    for name in contents:
-        if ('.png' in name) and ('bstep0' not in name):
-            os.rename(name,'day'+str(days[i])+'/'+name)
-    os.rename('serpent.i','day'+str(days[i])+'/serpent.i')
-    os.rename('serpent.i_res.m','day'+str(days[i])+'/serpent.i_res.m')
-    entry = pd.DataFrame.from_dict({'Day':[days[i]],'Configuration':['Critical'],'keff':[k_crit],'CD Angle':[angle]})
-    entry = pd.concat([entry,power_grab('serpent.i_det1.m')],axis=1)
-    entry = pd.concat([entry,pd.DataFrame.from_dict({'Day':[days[i],days[i]],'Configuration':['In','Out'],'keff':[k_min,k_max],'CD Angle':[0,180]})],ignore_index=True)
-    os.rename('serpent.i_det1.m','day'+str(days[i])+'/serpent.i_det1.m')
-    data_storage = pd.concat([data_storage,entry],ignore_index=True)
-    data_storage.to_csv('burnup_eigenvalues.csv',index=False)
-
-    write_serpent(angle,100000,kwarg='burn',day=days[i+1])
-    run_serpent()
-    
-k_max, k_min, k_crit, angle = crit_search()
-    
-os.makedirs('day'+str(days[-1]),exist_ok=True)
-contents = os.listdir()
-for name in contents:
-    if ('.png' in name) and ('bstep0' not in name):
-        os.rename(name,'day'+str(days[-1])+'/'+name)
-os.rename('serpent.i','day'+str(days[-1])+'/serpent.i')
-os.rename('serpent.i_res.m','day'+str(days[-1])+'/serpent.i_res.m')
-os.rename('serpent.i_geom1.png','day'+str(days[-1])+'/serpent.i_geom1.png')
-entry = pd.DataFrame.from_dict({'Day':[days[-1]],'Configuration':['Critical'],'keff':[k_crit],'CD Angle':[angle]})
-entry = pd.concat([entry,power_grab('serpent.i_det1.m')],axis=1)
-entry = pd.concat([entry,pd.DataFrame.from_dict({'Day':[days[-1],days[-1]],'Configuration':['In','Out'],'keff':[k_min,k_max],'CD Angle':[0,180]})],ignore_index=True)
-os.rename('serpent.i_det1.m','day'+str(days[-1])+'/serpent.i_det1.m')
-data_storage = pd.concat([data_storage,entry],ignore_index=True)
-data_storage.to_csv('burnup_eigenvalues.csv',index=False)
-'''

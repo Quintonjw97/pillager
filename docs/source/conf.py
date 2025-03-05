@@ -19,13 +19,14 @@ release = '0.0.2'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['myst_parser','sphinx.ext.autodoc','sphinx.ext.napoleon','sphinx.ext.githubpages']
+extensions = ['myst_parser','sphinx.ext.autodoc','sphinx.ext.napoleon','sphinx.ext.githubpages','sphinx.ext.autosummary']
 napoleon_numpy_docstring = True
 napoleon_google_docstring = False
 templates_path = ['_templates']
 exclude_patterns = []
 autodoc_default_options = {'members': True}
 autoclass_content = 'class'
+autosummary_generate = True
 
 intersphinx_mapping = {
   'python': ('https://docs.python.org/3.11', None),

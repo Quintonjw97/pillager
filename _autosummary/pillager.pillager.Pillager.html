@@ -62,7 +62,7 @@ regressive secant methods.</p>
 <td><p>Gets detector values from Serpent simulation detector output file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.get_eigenvalue" title="pillager.pillager.Pillager.get_eigenvalue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_eigenvalue</span></code></a>()</p></td>
-<td><p>Gets implicit eigenvalue from Serpent results output file.</p></td>
+<td><p>Gets implicit eigenvalue and uncertainty from Serpent results output file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.move_files" title="pillager.pillager.Pillager.move_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_files</span></code></a>([step])</p></td>
 <td><p>Moves generated input and output files for a given timestep.</p></td>
@@ -105,13 +105,18 @@ regressive secant methods.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.get_eigenvalue">
 <span class="sig-name descname"><span class="pre">get_eigenvalue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.get_eigenvalue" title="Link to this definition">¶</a></dt>
-<dd><p>Gets implicit eigenvalue from Serpent results output file.</p>
+<dd><p>Gets implicit eigenvalue and uncertainty from Serpent results output file.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.move_files">
 <span class="sig-name descname"><span class="pre">move_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.move_files" title="Link to this definition">¶</a></dt>
 <dd><p>Moves generated input and output files for a given timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>step</strong> (<em>int</em><em> or </em><em>float</em>) – Burnup step associated with files. Unblacklisted files in directory will be moved to this burnup step folder. Defaults to zero.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -151,8 +156,11 @@ regressive secant methods.</p>
 <li><p><strong>step</strong> (<em>int</em><em> or </em><em>float</em>) – Burnup step to use for burnup calculation. Defaults to zero.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>serpent.i</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generates serpent.i file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>file</p>
 </dd>
 </dl>
 </dd></dl>

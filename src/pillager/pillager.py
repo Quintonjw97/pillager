@@ -47,6 +47,16 @@ class Pillager():
     def run_search(self,config):    # Updated to conform to class format
         """Conducts criticality search.
 
+        Parameters
+        ----------
+        config : str
+            Determines the format of the input file used in the search. Can be 'initial' or ''.
+
+        Returns
+        -------
+        list
+            Contains maximum, minimum, and critical k-eigenvalues and the associated critical search value, respectively.
+        
         """
         thetas = self.xbounds
         self.write_serpent(thetas[0],self.particles,config=config)
@@ -97,7 +107,18 @@ class Pillager():
         return [k_max, k_min, k_crit, angle]
 
     def regressive_secant(self,xs,fs):    # Updated to conform to class format
-        """Conducts a regressive secant evaluation to find next input value.
+        """Conducts a regressive secant evaluation to find next search value.
+
+        Parameters
+        ----------
+        xs : float, list of floats
+            Initial and/or previous input values to be used in the search.
+        fs : float, list of floats
+            Function values corresponding to the xs values provided.
+
+        Returns
+        -------
+        float
 
         """
         R = self.retained_values
@@ -107,8 +128,21 @@ class Pillager():
             x_new = (np.sum(xs[-R:])*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(np.square(xs[-R:]))*np.sum(fs[-R:])) / ((2+R)*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(fs[-R:])*np.sum(xs[-R:])) 
         return x_new
 
-    def generalized_regressive_secant(self,xs,sigs,fs):  # Updated to conform to class format
-        """Conducts a generalized regressive secant evaluation to find next input value.
+    def generalized_regressive_secant(self,xs,fs,sigs):  # Updated to conform to class format
+        """Conducts a generalized regressive secant evaluation to find next search value.
+        
+        Parameters
+        ----------
+        xs : float, list of floats
+            Initial and/or previous input values to be used in the search.
+        fs : float, list of floats
+            Function values corresponding to the xs values provided.
+        sigs : float, list of floats
+            Statistical uncertainties corresponding to the function values provided.
+
+        Returns
+        -------
+        float
 
         """
         R = self.retained_values
@@ -119,7 +153,12 @@ class Pillager():
         return x_new
 
     def get_eigenvalue(self):   # Updated to conform to class format
-        """Gets implicit eigenvalue and uncertainty from Serpent results output file.
+        """Gets implicit eigenvalue and uncertainty from Serpent results output file (serpent.i.res).
+        
+        Returns
+        -------
+        tuple
+            Tuple containing the implicit k-eigenvalue and its statistical uncertainty.
 
         """
         file = open(self.output_dir+'serpent.i_res.m')
@@ -135,6 +174,15 @@ class Pillager():
 
     def get_detector_values(self,file_name):
         """Gets detector values from Serpent simulation detector output file.
+
+        Parameters
+        ----------
+        file_name : str
+            Name of the Serpent results file (.det file).
+
+        Returns
+        -------
+        Pandas Dataframe
 
         """
         #Open the file, read it, and close it

@@ -1,0 +1,35 @@
+pillager.pillager.Pillager
+==========================
+
+.. currentmodule:: pillager.pillager
+
+.. autoclass:: Pillager
+   :members:                               
+   :show-inheritance:                      
+   :inherited-members:                     
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Pillager.__init__
+      ~Pillager.blacklist_dir_files
+      ~Pillager.generalized_regressive_secant
+      ~Pillager.get_detector_values
+      ~Pillager.get_eigenvalue
+      ~Pillager.move_files
+      ~Pillager.pillage
+      ~Pillager.regressive_secant
+      ~Pillager.run_search
+      ~Pillager.run_serpent
+      ~Pillager.write_serpent
+   
+   
+
+   
+   
+   

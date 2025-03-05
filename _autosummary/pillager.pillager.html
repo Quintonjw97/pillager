@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pillager.pillager &#8212; pillager 0.0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=e3a6060d"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pillager.pillager.Pillager" href="pillager.pillager.Pillager.html" />
+    <link rel="prev" title="pillager" href="pillager.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pillager.pillager">
+<span id="pillager-pillager"></span><h1>pillager.pillager<a class="headerlink" href="#module-pillager.pillager" title="Link to this heading">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pillager.pillager.Pillager.html#pillager.pillager.Pillager" title="pillager.pillager.Pillager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pillager</span></code></a>()</p></td>
+<td><p>Class for conducting coupled criticality search-burnup calculations in the Serpent 2 radiation transport code.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pillager.pillager.</span></span><span class="sig-name descname"><span class="pre">Pillager</span></span><a class="headerlink" href="#pillager.pillager.Pillager" title="Link to this definition">¶</a></dt>
+<dd><p>Class for conducting coupled criticality search-burnup calculations in the Serpent 2 radiation transport code.</p>
+<p>Individual functions can also be used to conduct variable search using secant, regressive secant, or generalized
+regressive secant methods.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.blacklist_dir_files">
+<span class="sig-name descname"><span class="pre">blacklist_dir_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.blacklist_dir_files" title="Link to this definition">¶</a></dt>
+<dd><p>Designates current directory files as blacklisted from movement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.generalized_regressive_secant">
+<span class="sig-name descname"><span class="pre">generalized_regressive_secant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.generalized_regressive_secant" title="Link to this definition">¶</a></dt>
+<dd><p>Conducts a generalized regressive secant evaluation to find next input value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.get_detector_values">
+<span class="sig-name descname"><span class="pre">get_detector_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.get_detector_values" title="Link to this definition">¶</a></dt>
+<dd><p>Gets detector values from Serpent simulation detector output file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.get_eigenvalue">
+<span class="sig-name descname"><span class="pre">get_eigenvalue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.get_eigenvalue" title="Link to this definition">¶</a></dt>
+<dd><p>Gets implicit eigenvalue from Serpent results output file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.move_files">
+<span class="sig-name descname"><span class="pre">move_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.move_files" title="Link to this definition">¶</a></dt>
+<dd><p>Moves generated input and output files for a given timestep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.pillage">
+<span class="sig-name descname"><span class="pre">pillage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.pillage" title="Link to this definition">¶</a></dt>
+<dd><p>Conducts a full coupled criticality search-burnup calculation over the designated burnup steps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.regressive_secant">
+<span class="sig-name descname"><span class="pre">regressive_secant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.regressive_secant" title="Link to this definition">¶</a></dt>
+<dd><p>Conducts a regressive secant evaluation to find next input value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.run_search">
+<span class="sig-name descname"><span class="pre">run_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.run_search" title="Link to this definition">¶</a></dt>
+<dd><p>Conducts criticality search.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.run_serpent">
+<span class="sig-name descname"><span class="pre">run_serpent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.run_serpent" title="Link to this definition">¶</a></dt>
+<dd><p>Runs the generated serpent input file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.write_serpent">
+<span class="sig-name descname"><span class="pre">write_serpent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.write_serpent" title="Link to this definition">¶</a></dt>
+<dd><p>Writes serpent input files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – The value used for determining control surface positioning in the control_base.i file.</p></li>
+<li><p><strong>particles</strong> (<em>int</em>) – The number of particles per generation to use in the Serpent simulation.</p></li>
+<li><p><strong>config</strong> (<em>str</em>) – Determines the format of the input file. Can be ‘initial’, ‘initialBurn’, ‘burn’, or ‘’.</p></li>
+<li><p><strong>step</strong> (<em>int</em><em> or </em><em>float</em>) – Burnup step to use for burnup calculation. Defaults to zero.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>serpent.i</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pillager</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pillager.html">pillager</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pillager.pillager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pillager.pillager.Pillager.html">pillager.pillager.Pillager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pillager.pillager.Pillager"><code class="docutils literal notranslate"><span class="pre">Pillager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.blacklist_dir_files"><code class="docutils literal notranslate"><span class="pre">Pillager.blacklist_dir_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.generalized_regressive_secant"><code class="docutils literal notranslate"><span class="pre">Pillager.generalized_regressive_secant()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.get_detector_values"><code class="docutils literal notranslate"><span class="pre">Pillager.get_detector_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.get_eigenvalue"><code class="docutils literal notranslate"><span class="pre">Pillager.get_eigenvalue()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.move_files"><code class="docutils literal notranslate"><span class="pre">Pillager.move_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.pillage"><code class="docutils literal notranslate"><span class="pre">Pillager.pillage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.regressive_secant"><code class="docutils literal notranslate"><span class="pre">Pillager.regressive_secant()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.run_search"><code class="docutils literal notranslate"><span class="pre">Pillager.run_search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.run_serpent"><code class="docutils literal notranslate"><span class="pre">Pillager.run_serpent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager.write_serpent"><code class="docutils literal notranslate"><span class="pre">Pillager.write_serpent()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="pillager.html">pillager</a><ul>
+      <li>Previous: <a href="pillager.html" title="previous chapter">pillager</a></li>
+      <li>Next: <a href="pillager.pillager.Pillager.html" title="next chapter">pillager.pillager.Pillager</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Quinton J. Williams.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/_autosummary/pillager.pillager.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

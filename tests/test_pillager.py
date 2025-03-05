@@ -1,32 +1,35 @@
-import pillager
+import pillager.pillager as pg
 import pytest
 
-def test_blacklist_dir_files():
+t_class = pg()
+
+def test_blacklist_dir_files(obj=t_class):
+    obj.blacklist_dir_files()
     assert True
 
-def test_run_search():
+def test_run_search(obj=t_class):
     assert True
 
-def test_regressive_secant():
+def test_regressive_secant(obj=t_class):
     assert True
 
-def test_generalized_regressive_secant():
+def test_generalized_regressive_secant(obj=t_class):
     assert True
 
-def test_get_eigenvalue():
+def test_get_eigenvalue(obj=t_class):
     assert True
 
-def test_get_detector_values():
+def test_get_detector_values(obj=t_class):
     assert True
 
-def test_write_serpent():
+def test_write_serpent(obj=t_class):
     assert True
 
-def test_run_serpent():
+def test_run_serpent(obj=t_class):
     assert True
 
-def test_move_files():
+def test_move_files(obj=t_class):
     assert True
 
-def test_pillage():
+def test_pillage(obj=t_class):
     assert True

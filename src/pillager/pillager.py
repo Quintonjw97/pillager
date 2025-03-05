@@ -1,14 +1,11 @@
-# %%
 import numpy as np
 import os
 import subprocess
 import pandas as pd
 import csv
 
-# %%
 class Pillager():
-    """ 
-    Class for conducting coupled criticality search-burnup calculations in the Serpent 2 radiation transport code. 
+    """ Class for conducting coupled criticality search-burnup calculations in the Serpent 2 radiation transport code. 
 
     Individual functions can also be used to conduct variable search using secant, regressive secant, or generalized 
     regressive secant methods.
@@ -36,17 +33,20 @@ class Pillager():
         #self.y0 = None
         #self.sigma0 = None
         #self.move_files = True
-        self.file_blacklist = [self.input_base,self.control_base,'serpent.i.wrk']
+        self.file_blacklist = [self.input_base,self.control_base,'serpent.i.wrk','outputs.csv']
 
     def blacklist_dir_files(self):
+        """Designates current directory files as blacklisted from movement.
+        
         """
-        Designates current directory files as blacklisted from movement.
-        """
-        return self.file_blacklist.append(os.listdir(self.output_dir))
+        contents = os.listdir(self.output_dir)
+        for file in contents:
+            self.file_blacklist.append(file)
+        return
 
     def run_search(self,config):    # Updated to conform to class format
-        """
-        Conducts criticality search.
+        """Conducts criticality search.
+
         """
         thetas = self.xbounds
         self.write_serpent(thetas[0],self.particles,config=config)
@@ -97,8 +97,8 @@ class Pillager():
         return [k_max, k_min, k_crit, angle]
 
     def regressive_secant(self,xs,fs):    # Updated to conform to class format
-        """
-        Conducts a regressive secant evaluation to find next input value.
+        """Conducts a regressive secant evaluation to find next input value.
+
         """
         R = self.retained_values
         if R >= len(fs):
@@ -108,8 +108,8 @@ class Pillager():
         return x_new
 
     def generalized_regressive_secant(self,xs,sigs,fs):  # Updated to conform to class format
-        """
-        Conducts a generalized regressive secant evaluation to find next input value.
+        """Conducts a generalized regressive secant evaluation to find next input value.
+
         """
         R = self.retained_values
         if R >= len(fs):
@@ -119,8 +119,8 @@ class Pillager():
         return x_new
 
     def get_eigenvalue(self):   # Updated to conform to class format
-        """
-        Gets implicit eigenvalue from Serpent results output file.
+        """Gets implicit eigenvalue from Serpent results output file.
+
         """
         file = open(self.output_dir+'serpent.i_res.m')
         data = file.readlines()
@@ -134,8 +134,8 @@ class Pillager():
         return keff, sdev
 
     def get_detector_values(self,file_name):
-        """
-        Gets detector values from Serpent simulation detector output file.
+        """Gets detector values from Serpent simulation detector output file.
+
         """
         #Open the file, read it, and close it
         file = open(self.output_dir + file_name)
@@ -298,14 +298,29 @@ class Pillager():
         return df
         
     def write_serpent(self,x,particles,config,step=0):   # Updated to conform to class format
-        """
-        Writes serpent input files.
+        """Writes serpent input files.
+
+        Parameters
+        ----------
+        x : float
+            The value used for determining control surface positioning in the control_base.i file.
+        particles : int
+            The number of particles per generation to use in the Serpent simulation.
+        config : str
+            Determines the format of the input file. Can be 'initial', 'initialBurn', 'burn', or ''.
+        step : int or float
+            Burnup step to use for burnup calculation. Defaults to zero.
+
+        Returns
+        -------
+        serpent.i
+
         """
         with open(self.input_base,'r', encoding='utf-8') as f:
             with open('serpent.i','w', encoding='utf-8') as n:
                 for line in f:
                     n.write(line)
-                n.write(f'\n set pop {particles} {self.generations} {self.skipped_gens} \n')
+                n.write(f'\n set pop {int(particles)} {self.generations} {self.skipped_gens} \n')
                 n.write('set bc 1 \n')
                 n.write('set opti 3 \n')
                 n.write('set nbuf 100 \n')
@@ -344,18 +359,19 @@ class Pillager():
                 n.write('set rfr continue \"serpent.i.wrk\" \n')
 
     def run_serpent(self):  # Updated to conform to class format
-        """
-        Runs the generated serpent input file.
+        """Runs the generated serpent input file.
+
         """
         cmd = ['sss2', 'serpent.i', '-omp', str(self.nOMP)]
         subprocess.run(cmd,shell=False)
         return
 
     def move_files(self,step=0):
-        """
-        Moves generated input and output files for a given timestep.
+        """Moves generated input and output files for a given timestep.
+
         """
         os.makedirs(f'day{step}',exist_ok=True)
+        self.file_blacklist.append(f'day{step}')
         contents = os.listdir(self.output_dir)
         for name in contents:
             if name not in self.file_blacklist:
@@ -363,8 +379,8 @@ class Pillager():
         return
 
     def pillage(self):
-        """
-        Conducts a full coupled criticality search-burnup calculation over the designated burnup steps.
+        """Conducts a full coupled criticality search-burnup calculation over the designated burnup steps.
+
         """
         data_storage = pd.DataFrame.from_dict({'Day':[],'k_max':[],'k_min':[],'k_crit':[],'CD Angle':[]})
         eigenvalues = self.run_search('initial')
@@ -391,12 +407,11 @@ class Pillager():
         data_storage.to_csv('outputs.csv',index=False)
         self.move_files()
         return
-
-data_storage = pd.DataFrame.from_dict({'Day':[],'Configuration':[],'keff':[],'CD Angle':[]})
-# %%
+'''
 # Functionality Test
-
 problem = Pillager()
-problem.input_base = 'serpent.i'
-df = problem.get_detector_values('serpent.i_det0.m')
-print(df)
+problem.blacklist_dir_files()
+problem.particles = 1e4
+problem.retained_values = 3
+problem.pillage()
+'''

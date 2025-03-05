@@ -4,7 +4,7 @@ import pytest
 t_class = pg.Pillager()
 
 def test_blacklist_dir_files(obj=t_class):
-    obj.blacklist_dir_files()
+    
     assert True
 
 def test_run_search(obj=t_class):

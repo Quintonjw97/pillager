@@ -119,7 +119,7 @@ class Pillager():
         return x_new
 
     def get_eigenvalue(self):   # Updated to conform to class format
-        """Gets implicit eigenvalue from Serpent results output file.
+        """Gets implicit eigenvalue and uncertainty from Serpent results output file.
 
         """
         file = open(self.output_dir+'serpent.i_res.m')
@@ -313,7 +313,8 @@ class Pillager():
 
         Returns
         -------
-        serpent.i
+        file
+            Generates serpent.i file.
 
         """
         with open(self.input_base,'r', encoding='utf-8') as f:
@@ -369,6 +370,10 @@ class Pillager():
     def move_files(self,step=0):
         """Moves generated input and output files for a given timestep.
 
+        Parameters
+        ----------
+        step : int or float
+            Burnup step associated with files. Unblacklisted files in directory will be moved to this burnup step folder. Defaults to zero.
         """
         os.makedirs(f'day{step}',exist_ok=True)
         self.file_blacklist.append(f'day{step}')

@@ -55,14 +55,14 @@ regressive secant methods.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.blacklist_dir_files" title="pillager.pillager.Pillager.blacklist_dir_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blacklist_dir_files</span></code></a>()</p></td>
 <td><p>Designates current directory files as blacklisted from movement.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.generalized_regressive_secant" title="pillager.pillager.Pillager.generalized_regressive_secant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generalized_regressive_secant</span></code></a>(xs, sigs, fs)</p></td>
-<td><p>Conducts a generalized regressive secant evaluation to find next input value.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.generalized_regressive_secant" title="pillager.pillager.Pillager.generalized_regressive_secant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generalized_regressive_secant</span></code></a>(xs, fs, sigs)</p></td>
+<td><p>Conducts a generalized regressive secant evaluation to find next search value.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.get_detector_values" title="pillager.pillager.Pillager.get_detector_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_detector_values</span></code></a>(file_name)</p></td>
 <td><p>Gets detector values from Serpent simulation detector output file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.get_eigenvalue" title="pillager.pillager.Pillager.get_eigenvalue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_eigenvalue</span></code></a>()</p></td>
-<td><p>Gets implicit eigenvalue and uncertainty from Serpent results output file.</p></td>
+<td><p>Gets implicit eigenvalue and uncertainty from Serpent results output file (serpent.i.res).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.move_files" title="pillager.pillager.Pillager.move_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_files</span></code></a>([step])</p></td>
 <td><p>Moves generated input and output files for a given timestep.</p></td>
@@ -71,7 +71,7 @@ regressive secant methods.</p>
 <td><p>Conducts a full coupled criticality search-burnup calculation over the designated burnup steps.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.regressive_secant" title="pillager.pillager.Pillager.regressive_secant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regressive_secant</span></code></a>(xs, fs)</p></td>
-<td><p>Conducts a regressive secant evaluation to find next input value.</p></td>
+<td><p>Conducts a regressive secant evaluation to find next search value.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.run_search" title="pillager.pillager.Pillager.run_search"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_search</span></code></a>(config)</p></td>
 <td><p>Conducts criticality search.</p></td>
@@ -92,20 +92,48 @@ regressive secant methods.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.generalized_regressive_secant">
-<span class="sig-name descname"><span class="pre">generalized_regressive_secant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.generalized_regressive_secant" title="Link to this definition">¶</a></dt>
-<dd><p>Conducts a generalized regressive secant evaluation to find next input value.</p>
+<span class="sig-name descname"><span class="pre">generalized_regressive_secant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.generalized_regressive_secant" title="Link to this definition">¶</a></dt>
+<dd><p>Conducts a generalized regressive secant evaluation to find next search value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xs</strong> (<em>float</em><em>, </em><em>list</em><em> of </em><em>floats</em>) – Initial and/or previous input values to be used in the search.</p></li>
+<li><p><strong>fs</strong> (<em>float</em><em>, </em><em>list</em><em> of </em><em>floats</em>) – Function values corresponding to the xs values provided.</p></li>
+<li><p><strong>sigs</strong> (<em>float</em><em>, </em><em>list</em><em> of </em><em>floats</em>) – Statistical uncertainties corresponding to the function values provided.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.get_detector_values">
 <span class="sig-name descname"><span class="pre">get_detector_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.get_detector_values" title="Link to this definition">¶</a></dt>
 <dd><p>Gets detector values from Serpent simulation detector output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – Name of the Serpent results file (.det file).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pandas Dataframe</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.get_eigenvalue">
 <span class="sig-name descname"><span class="pre">get_eigenvalue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.get_eigenvalue" title="Link to this definition">¶</a></dt>
-<dd><p>Gets implicit eigenvalue and uncertainty from Serpent results output file.</p>
+<dd><p>Gets implicit eigenvalue and uncertainty from Serpent results output file (serpent.i.res).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple containing the implicit k-eigenvalue and its statistical uncertainty.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -128,13 +156,35 @@ regressive secant methods.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.regressive_secant">
 <span class="sig-name descname"><span class="pre">regressive_secant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.regressive_secant" title="Link to this definition">¶</a></dt>
-<dd><p>Conducts a regressive secant evaluation to find next input value.</p>
+<dd><p>Conducts a regressive secant evaluation to find next search value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xs</strong> (<em>float</em><em>, </em><em>list</em><em> of </em><em>floats</em>) – Initial and/or previous input values to be used in the search.</p></li>
+<li><p><strong>fs</strong> (<em>float</em><em>, </em><em>list</em><em> of </em><em>floats</em>) – Function values corresponding to the xs values provided.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.run_search">
 <span class="sig-name descname"><span class="pre">run_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.run_search" title="Link to this definition">¶</a></dt>
 <dd><p>Conducts criticality search.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>str</em>) – Determines the format of the input file used in the search. Can be ‘initial’ or ‘’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Contains maximum, minimum, and critical k-eigenvalues and the associated critical search value, respectively.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

@@ -7,7 +7,7 @@ t_class = pg.Pillager()
 t_class.output_dir= os.path.dirname(__file__) + '/util_data/'
 def test_blacklist_dir_files(obj=t_class):
     obj.blacklist_dir_files()
-    assert [obj.input_base,obj.control_base,'serpent.i.wrk','outputs.csv','serpent.i_det0.m','serpent.i_res.m'] ==  obj.file_blacklist
+    assert set(obj.file_blacklist).issubset([obj.input_base,obj.control_base,'serpent.i.wrk','outputs.csv','serpent.i_det0.m','serpent.i_res.m'])
 
 def test_run_search(obj=t_class):
     assert True

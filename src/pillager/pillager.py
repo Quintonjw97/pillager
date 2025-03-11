@@ -44,7 +44,7 @@ class Pillager():
             self.file_blacklist.append(file)
         return
 
-    def run_search(self,config):    # Updated to conform to class format
+    def run_search(self,config):   
         """Conducts criticality search.
 
         Parameters
@@ -106,13 +106,13 @@ class Pillager():
         
         return [k_max, k_min, k_crit, angle]
 
-    def regressive_secant(self,xs,fs):    # Updated to conform to class format
+    def regressive_secant(self,xs,fs):    
         """Conducts a regressive secant evaluation to find next search value.
 
         Parameters
         ----------
         xs : float, list of floats
-            Initial and/or previous input values to be used in the search.
+            Initial and/or previous input values to be used in the search. Requires at least two starting values.
         fs : float, list of floats
             Function values corresponding to the xs values provided.
 
@@ -128,13 +128,13 @@ class Pillager():
             x_new = (np.sum(xs[-R:])*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(np.square(xs[-R:]))*np.sum(fs[-R:])) / ((2+R)*np.sum(np.multiply(fs[-R:],xs[-R:])) - np.sum(fs[-R:])*np.sum(xs[-R:])) 
         return x_new
 
-    def generalized_regressive_secant(self,xs,fs,sigs):  # Updated to conform to class format
+    def generalized_regressive_secant(self,xs,fs,sigs):  
         """Conducts a generalized regressive secant evaluation to find next search value.
         
         Parameters
         ----------
         xs : float, list of floats
-            Initial and/or previous input values to be used in the search.
+            Initial and/or previous input values to be used in the search. Requires at least two starting values.
         fs : float, list of floats
             Function values corresponding to the xs values provided.
         sigs : float, list of floats
@@ -152,7 +152,7 @@ class Pillager():
             x_new = (np.sum(np.divide(xs[-R:],sigs[-R:]))*np.sum(np.divide(np.multiply(fs[-R:],xs[-R:]),sigs[-R:])) - np.sum(np.divide(np.square(xs[-R:]),sigs[-R:]))*np.sum(np.divide(fs[-R:],sigs[-R:]))) / (np.sum(np.divide(np.multiply(fs[-R:],xs[-R:]),sigs[-R:]))*np.sum(np.reciprocal(sigs[-R:])) - np.sum(np.divide(fs[-R:],sigs[-R:]))*np.sum(np.divide(xs[-R:],sigs[-R:]))) 
         return x_new
 
-    def get_eigenvalue(self):   # Updated to conform to class format
+    def get_eigenvalue(self):   
         """Gets implicit eigenvalue and uncertainty from Serpent results output file (serpent.i.res).
         
         Returns
@@ -345,7 +345,7 @@ class Pillager():
         os.remove('flux_dat.csv')
         return df
         
-    def write_serpent(self,x,particles,config,step=0):   # Updated to conform to class format
+    def write_serpent(self,x,particles,config,step=0):   
         """Writes serpent input files.
 
         Parameters
@@ -365,27 +365,17 @@ class Pillager():
             Generates serpent.i file.
 
         """
-        with open(self.input_base,'r', encoding='utf-8') as f:
+        with open(self.output_dir + self.input_base,'r', encoding='utf-8') as f, open(self.output_dir + self.control_base,'r', encoding='utf-8') as c:
             with open('serpent.i','w', encoding='utf-8') as n:
                 for line in f:
                     n.write(line)
+                for line in c:
+                    n.write(eval(f'f"""{line}"""'))
                 n.write(f'\n set pop {int(particles)} {self.generations} {self.skipped_gens} \n')
                 n.write('set bc 1 \n')
                 n.write('set opti 3 \n')
                 n.write('set nbuf 100 \n')
                 n.write('set memfrac 0.9 \n')
-                n.write(f'surf 94 pad 0.0 0.0 14.0 15.0 {300.0+180-x} {60.0+180-x} \n')
-                n.write(f'surf 95 pad 0.0 0.0 14.0 15.0 {240.0+180-x} {0.0+180-x} \n')
-                n.write(f'surf 96 pad 0.0 0.0 14.0 15.0 {240.0+180-x} {0.0+180-x} \n')
-                n.write(f'surf 97 pad 0.0 0.0 14.0 15.0 {180.0+180-x} {-60.0+180-x} \n')
-                n.write(f'surf 98 pad 0.0 0.0 14.0 15.0 {180.0+180-x} {-60.0+180-x} \n')
-                n.write(f'surf 99 pad 0.0 0.0 14.0 15.0 {120.0+180-x} {-120.0+180-x} \n')
-                n.write(f'surf 100 pad 0.0 0.0 14.0 15.0 {120.0+180-x} {-120.0+180-x} \n')
-                n.write(f'surf 101 pad 0.0 0.0 14.0 15.0 {60.0+180-x} {-180.0+180-x} \n')
-                n.write(f'surf 102 pad 0.0 0.0 14.0 15.0 {60.0+180-x} {-180.0+180-x} \n')
-                n.write(f'surf 103 pad 0.0 0.0 14.0 15.0 {0.0+180-x} {-240.0+180-x} \n')
-                n.write(f'surf 104 pad 0.0 0.0 14.0 15.0 {0.0+180-x} {-240.0+180-x} \n')
-                n.write(f'surf 105 pad 0.0 0.0 14.0 15.0 {300.0+180-x} {60.0+180-x} \n')
         with open('serpent.i','a', encoding='utf-8') as n:
             if config == 'initial':
                 pass
@@ -407,7 +397,7 @@ class Pillager():
             else:
                 n.write('set rfr continue \"serpent.i.wrk\" \n')
 
-    def run_serpent(self):  # Updated to conform to class format
+    def run_serpent(self):  
         """Runs the generated serpent input file.
 
         """
@@ -423,12 +413,12 @@ class Pillager():
         step : int or float
             Burnup step associated with files. Unblacklisted files in directory will be moved to this burnup step folder. Defaults to zero.
         """
-        os.makedirs(f'day{step}',exist_ok=True)
+        os.makedirs(self.output_dir + f'day{step}',exist_ok=True)
         self.file_blacklist.append(f'day{step}')
         contents = os.listdir(self.output_dir)
         for name in contents:
             if name not in self.file_blacklist:
-                os.rename(name,f'day{step}/{name}')
+                os.rename(name,self.output_dir + f'day{step}/{name}')
         return
 
     def pillage(self):
@@ -467,4 +457,8 @@ problem.blacklist_dir_files()
 problem.particles = 1e4
 problem.retained_values = 3
 problem.pillage()
+
+test = Pillager()
+test.output_dir = '../../tests/util_data/'
+test.write_serpent(1000,1e9,'initial')
 '''

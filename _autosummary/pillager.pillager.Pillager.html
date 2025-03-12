@@ -44,13 +44,190 @@ regressive secant methods.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.__init__" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initializes default required Serpent input and search values.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.output_dir">
+<span class="sig-name descname"><span class="pre">output_dir</span></span><a class="headerlink" href="#pillager.pillager.Pillager.output_dir" title="Link to this definition">¶</a></dt>
+<dd><p>Path to directory where base files are located and outputs are generated. Default: ‘./’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.input_base">
+<span class="sig-name descname"><span class="pre">input_base</span></span><a class="headerlink" href="#pillager.pillager.Pillager.input_base" title="Link to this definition">¶</a></dt>
+<dd><p>Name of base Serpent input file, cannot be ‘serpent.i’. Default: ‘serpent_base.i’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.control_base">
+<span class="sig-name descname"><span class="pre">control_base</span></span><a class="headerlink" href="#pillager.pillager.Pillager.control_base" title="Link to this definition">¶</a></dt>
+<dd><p>Name of input file containing control surface lines. Default: ‘control.i’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.particles">
+<span class="sig-name descname"><span class="pre">particles</span></span><a class="headerlink" href="#pillager.pillager.Pillager.particles" title="Link to this definition">¶</a></dt>
+<dd><p>Number of particles per generation. Default 1e5</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.generations">
+<span class="sig-name descname"><span class="pre">generations</span></span><a class="headerlink" href="#pillager.pillager.Pillager.generations" title="Link to this definition">¶</a></dt>
+<dd><p>Number of active generations. Default: 160</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.skipped_gens">
+<span class="sig-name descname"><span class="pre">skipped_gens</span></span><a class="headerlink" href="#pillager.pillager.Pillager.skipped_gens" title="Link to this definition">¶</a></dt>
+<dd><p>Number of skipped generations. Default: 40</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.target">
+<span class="sig-name descname"><span class="pre">target</span></span><a class="headerlink" href="#pillager.pillager.Pillager.target" title="Link to this definition">¶</a></dt>
+<dd><p>Target value for criticality search. Default: 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.retained_values">
+<span class="sig-name descname"><span class="pre">retained_values</span></span><a class="headerlink" href="#pillager.pillager.Pillager.retained_values" title="Link to this definition">¶</a></dt>
+<dd><p>Number of values to use in the search function. Default: 2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.err_tol">
+<span class="sig-name descname"><span class="pre">err_tol</span></span><a class="headerlink" href="#pillager.pillager.Pillager.err_tol" title="Link to this definition">¶</a></dt>
+<dd><p>Absolute error tolerance to use for search convergence. Default: 1e-5</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.var_tol">
+<span class="sig-name descname"><span class="pre">var_tol</span></span><a class="headerlink" href="#pillager.pillager.Pillager.var_tol" title="Link to this definition">¶</a></dt>
+<dd><p>Change in variable tolerance to use for search convergence. Default: 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.burnup_steps">
+<span class="sig-name descname"><span class="pre">burnup_steps</span></span><a class="headerlink" href="#pillager.pillager.Pillager.burnup_steps" title="Link to this definition">¶</a></dt>
+<dd><p>List of burnup steps. Default: [0.1, 0.5, 1]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of floats or ints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.burnup_type">
+<span class="sig-name descname"><span class="pre">burnup_type</span></span><a class="headerlink" href="#pillager.pillager.Pillager.burnup_type" title="Link to this definition">¶</a></dt>
+<dd><p>Serpent burnup calculation method (only daytot supported currently).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.xbounds">
+<span class="sig-name descname"><span class="pre">xbounds</span></span><a class="headerlink" href="#pillager.pillager.Pillager.xbounds" title="Link to this definition">¶</a></dt>
+<dd><p>Lower and upper bounds of the search domain. Default: [0,180]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of floats or ints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.generalized_search">
+<span class="sig-name descname"><span class="pre">generalized_search</span></span><a class="headerlink" href="#pillager.pillager.Pillager.generalized_search" title="Link to this definition">¶</a></dt>
+<dd><p>Determines the type of search method to use. Default: True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.nOMP">
+<span class="sig-name descname"><span class="pre">nOMP</span></span><a class="headerlink" href="#pillager.pillager.Pillager.nOMP" title="Link to this definition">¶</a></dt>
+<dd><p>Number of processors to use during Serpent runs. Default: 48</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pillager.pillager.Pillager.file_blacklist">
+<span class="sig-name descname"><span class="pre">file_blacklist</span></span><a class="headerlink" href="#pillager.pillager.Pillager.file_blacklist" title="Link to this definition">¶</a></dt>
+<dd><p>List of files which will not be moved when invoking move_files(). Default: [self.input_base,self.control_base,’serpent.i.wrk’,’outputs.csv’]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.__init__" title="pillager.pillager.Pillager.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Initializes default required Serpent input and search values.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pillager.pillager.Pillager.blacklist_dir_files" title="pillager.pillager.Pillager.blacklist_dir_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blacklist_dir_files</span></code></a>()</p></td>
 <td><p>Designates current directory files as blacklisted from movement.</p></td>
@@ -250,7 +427,25 @@ regressive secant methods.</p>
 <li class="toctree-l2 current"><a class="reference internal" href="pillager.pillager.html">pillager.pillager</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pillager.pillager.Pillager</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pillager.pillager.Pillager"><code class="docutils literal notranslate"><span class="pre">Pillager</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="#pillager.pillager.Pillager.__init__"><code class="docutils literal notranslate"><span class="pre">Pillager.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pillager.pillager.Pillager.__init__"><code class="docutils literal notranslate"><span class="pre">Pillager.__init__()</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.output_dir"><code class="docutils literal notranslate"><span class="pre">Pillager.output_dir</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.input_base"><code class="docutils literal notranslate"><span class="pre">Pillager.input_base</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.control_base"><code class="docutils literal notranslate"><span class="pre">Pillager.control_base</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.particles"><code class="docutils literal notranslate"><span class="pre">Pillager.particles</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.generations"><code class="docutils literal notranslate"><span class="pre">Pillager.generations</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.skipped_gens"><code class="docutils literal notranslate"><span class="pre">Pillager.skipped_gens</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.target"><code class="docutils literal notranslate"><span class="pre">Pillager.target</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.retained_values"><code class="docutils literal notranslate"><span class="pre">Pillager.retained_values</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.err_tol"><code class="docutils literal notranslate"><span class="pre">Pillager.err_tol</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.var_tol"><code class="docutils literal notranslate"><span class="pre">Pillager.var_tol</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.burnup_steps"><code class="docutils literal notranslate"><span class="pre">Pillager.burnup_steps</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.burnup_type"><code class="docutils literal notranslate"><span class="pre">Pillager.burnup_type</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.xbounds"><code class="docutils literal notranslate"><span class="pre">Pillager.xbounds</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.generalized_search"><code class="docutils literal notranslate"><span class="pre">Pillager.generalized_search</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.nOMP"><code class="docutils literal notranslate"><span class="pre">Pillager.nOMP</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pillager.pillager.Pillager.file_blacklist"><code class="docutils literal notranslate"><span class="pre">Pillager.file_blacklist</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l5"><a class="reference internal" href="#pillager.pillager.Pillager.blacklist_dir_files"><code class="docutils literal notranslate"><span class="pre">Pillager.blacklist_dir_files()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="#pillager.pillager.Pillager.generalized_regressive_secant"><code class="docutils literal notranslate"><span class="pre">Pillager.generalized_regressive_secant()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="#pillager.pillager.Pillager.get_detector_values"><code class="docutils literal notranslate"><span class="pre">Pillager.get_detector_values()</span></code></a></li>

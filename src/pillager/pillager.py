@@ -12,6 +12,44 @@ class Pillager():
 
     """
     def __init__(self):
+        """Initializes default required Serpent input and search values.
+        
+        Attributes
+        ----------
+        output_dir : str
+            Path to directory where base files are located and outputs are generated. Default: './'
+        input_base : str
+            Name of base Serpent input file, cannot be 'serpent.i'. Default: 'serpent_base.i'
+        control_base : str
+            Name of input file containing control surface lines. Default: 'control.i'
+        particles : int
+            Number of particles per generation. Default 1e5
+        generations : int
+            Number of active generations. Default: 160
+        skipped_gens : int
+            Number of skipped generations. Default: 40
+        target : float or int
+            Target value for criticality search. Default: 1
+        retained_values : int
+            Number of values to use in the search function. Default: 2
+        err_tol : float or int
+            Absolute error tolerance to use for search convergence. Default: 1e-5
+        var_tol : float or int
+            Change in variable tolerance to use for search convergence. Default: 1
+        burnup_steps : list of floats or ints
+            List of burnup steps. Default: [0.1, 0.5, 1]
+        burnup_type : str
+            Serpent burnup calculation method (only daytot supported currently).
+        xbounds : list of floats or ints
+            Lower and upper bounds of the search domain. Default: [0,180]
+        generalized_search : bool
+            Determines the type of search method to use. Default: True
+        nOMP : int
+            Number of processors to use during Serpent runs. Default: 48
+        file_blacklist : list of strings
+            List of files which will not be moved when invoking move_files(). Default: [self.input_base,self.control_base,'serpent.i.wrk','outputs.csv']
+
+        """
         self.output_dir = './'
         self.input_base = 'serpent_base.i'
         self.control_base = 'control.i'
@@ -25,15 +63,16 @@ class Pillager():
         self.burnup_steps = [0.1,0.5,1]
         self.burnup_type = 'daytot'
         self.xbounds = [0,180]
-        self.function = 'Serpent'
         self.generalized_search = True
         self.nOMP = 48
-        self.silent = True
+        self.file_blacklist = [self.input_base,self.control_base,'serpent.i.wrk','outputs.csv']
+        #self.function = 'Serpent'
+        #self.silent = True
         #self.x0 = None
         #self.y0 = None
         #self.sigma0 = None
         #self.move_files = True
-        self.file_blacklist = [self.input_base,self.control_base,'serpent.i.wrk','outputs.csv']
+        
 
     def blacklist_dir_files(self):
         """Designates current directory files as blacklisted from movement.

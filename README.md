@@ -28,12 +28,12 @@ The Pillager class contains various functions that are used to automatically con
 import pillager.pillager as pg
 
 problem = pg.Pillager()
-ans = np.exp(0)
+target = 1
 y = [-1,1]
-f = [ans - np.exp(y[0]),ans - np.exp(y[1])]
-for i in range(5):
+f = [target - np.exp(y[0]),target - np.exp(y[1])]
+while abs(f[-1] - target) > problem.err_tol:
     val = obj.regressive_secant(y,f)
     y.append(val)
-    f.append(ans - np.exp(y[-1]))
+    f.append(target - np.exp(y[-1]))
 ```
-This will converge to the target value (1) within the five iterations given.
+This will converge to the target value for the given function <i>exp(x)</i> (1) within the default error tolerance (1e-5). The final value in list <i>y</i> is the converged answer.

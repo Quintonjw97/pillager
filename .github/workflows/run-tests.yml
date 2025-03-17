@@ -37,7 +37,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        python -m pytest --cov --cov-report json
+        pytest
    # - name: Update Coverage Badge
       # GitHub actions: default branch variable
       # https://stackoverflow.com/questions/64781462/github-actions-default-branch-variable

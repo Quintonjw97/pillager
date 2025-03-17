@@ -36,4 +36,4 @@ while abs(f[-1] - target) > problem.err_tol:
     y.append(val)
     f.append(target - np.exp(y[-1]))
 ```
-This will converge to the target value for the given function <i>exp(x)</i> (1) within the default error tolerance (1e-5). The final value in list <i>y</i> is the converged answer.
+This will converge to the target value for the given function <i>exp(x)</i> within the default error tolerance (1e-5). The final value in list <i>y</i> is the converged answer.

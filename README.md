@@ -10,9 +10,17 @@ By providing a base Serpent input file for the reactor and a separate file conta
 
 <b>Note</b> the user must obtain access to Serpent 2 independently, it is not included in this package.
 
-# [Documentation](https://quintonjw97.github.io/pillager/)
+## Installation 
 
-# Example Value Search Problem
+To install, clone this repository and pip install as follows:
+```
+git clone https://github.com/Quintonjw97/pillager.git
+pip install .
+```
+
+## [Documentation](https://quintonjw97.github.io/pillager/)
+
+## Example Value Search Problem
 
 The Pillager class contains various functions that are used to automatically conduct the coupled search-burnup task, but these functions can also be used individually. Below is an example of a generic value search using the <i>regressive_secant()</i> function within an established class object.
 
@@ -20,4 +28,12 @@ The Pillager class contains various functions that are used to automatically con
 import pillager.pillager as pg
 
 problem = pg.Pillager()
+ans = np.exp(0)
+y = [-1,1]
+f = [ans - np.exp(y[0]),ans - np.exp(y[1])]
+for i in range(5):
+    val = obj.regressive_secant(y,f)
+    y.append(val)
+    f.append(ans - np.exp(y[-1]))
 ```
+This will converge to the target value (1) within the five iterations given.

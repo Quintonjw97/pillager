@@ -11,3 +11,13 @@ By providing a base Serpent input file for the reactor and a separate file conta
 <b>Note</b> the user must obtain access to Serpent 2 independently, it is not included in this package.
 
 # [Documentation](https://quintonjw97.github.io/pillager/)
+
+# Example Value Search Problem
+
+The Pillager class contains various functions that are used to automatically conduct the coupled search-burnup task, but these functions can also be used individually. Below is an example of a generic value search using the <i>regressive_secant()</i> function within an established class object.
+
+```
+import pillager.pillager as pg
+
+problem = pg.Pillager()
+```

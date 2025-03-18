@@ -137,14 +137,17 @@ regressive secant methods.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pillager.pillager.Pillager.run_search">
-<span class="sig-name descname"><span class="pre">run_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.run_search" title="Link to this definition">¶</a></dt>
-<dd><p>Conducts criticality search.</p>
+<span class="sig-name descname"><span class="pre">run_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pillager.pillager.Pillager.run_search" title="Link to this definition">¶</a></dt>
+<dd><p>Conducts criticality search by default. If a function is provided, a generic search will be conducted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>str</em>) – Determines the format of the input file used in the search. Can be ‘initial’ or ‘’.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>str</em>) – Determines the format of the input file used in the search. Can be ‘initial’ or ‘’.</p></li>
+<li><p><strong>function</strong> (<em>function object</em>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Contains maximum, minimum, and critical k-eigenvalues and the associated critical search value, respectively.</p>
+<dd class="field-even"><p>Contains maximum, minimum, and critical k-eigenvalues and the associated critical search value, respectively. If a generic search, the list contains search values with the last element being the final value.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>

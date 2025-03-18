@@ -83,67 +83,77 @@ class Pillager():
             self.file_blacklist.append(file)
         return
 
-    def run_search(self,config):   
-        """Conducts criticality search.
+    def run_search(self,config,function=False):   
+        """Conducts criticality search by default. If a function is provided, a generic search will be conducted.
 
         Parameters
         ----------
         config : str
             Determines the format of the input file used in the search. Can be 'initial' or ''.
+        function : function object
 
         Returns
         -------
         list
-            Contains maximum, minimum, and critical k-eigenvalues and the associated critical search value, respectively.
+            Contains maximum, minimum, and critical k-eigenvalues and the associated critical search value, respectively. If a generic search, the list contains search values with the last element being the final value.
         
         """
-        thetas = self.xbounds
-        self.write_serpent(thetas[0],self.particles,config=config)
-        self.run_serpent()
-        k_min, sdev = self.get_eigenvalue()
-        fun = [float(k_min) - self.target]
-        sigmas = [float(sdev)**2]
-        
-        self.write_serpent(thetas[1],self.particles,config=config)
-        self.run_serpent()
-        k_max, sdev = self.get_eigenvalue()
-        fun.append(float(k_max) - self.target)
-        sigmas.append(float(sdev)**2)
+        if function == False:
+            thetas = self.xbounds
+            self.write_serpent(thetas[0],self.particles,config=config)
+            self.run_serpent()
+            k_min, sdev = self.get_eigenvalue()
+            fun = [float(k_min) - self.target]
+            sigmas = [float(sdev)**2]
+            
+            self.write_serpent(thetas[1],self.particles,config=config)
+            self.run_serpent()
+            k_max, sdev = self.get_eigenvalue()
+            fun.append(float(k_max) - self.target)
+            sigmas.append(float(sdev)**2)
 
-        iteration = 0
-        if self.generalized_search:
-            while (abs(fun[-1]) > self.err_tol or abs(thetas[-1] - thetas[-2]) > self.var_tol) and iteration < 6:
-                iteration += 1
+            iteration = 0
+            if self.generalized_search:
+                while (abs(fun[-1]) > self.err_tol or abs(thetas[-1] - thetas[-2]) > self.var_tol) and iteration < 6:
+                    iteration += 1
 
-                thetas.append(self.generalized_regressive_secant(thetas,sigmas,fun))
-                if iteration < 4:
-                    self.write_serpent(thetas[-1],self.particles/10,config=config)
-                else:
-                    self.write_serpent(thetas[-1],self.particles,config=config)
-                self.run_serpent()
-                keff, sdev = self.get_eigenvalue()
+                    thetas.append(self.generalized_regressive_secant(thetas,sigmas,fun))
+                    if iteration < 4:
+                        self.write_serpent(thetas[-1],self.particles/10,config=config)
+                    else:
+                        self.write_serpent(thetas[-1],self.particles,config=config)
+                    self.run_serpent()
+                    keff, sdev = self.get_eigenvalue()
 
-                fun.append(float(keff) - self.target)
-                sigmas.append(float(sdev)**2)
-            k_crit = fun[-1] + self.target
-            angle = thetas[-1]
+                    fun.append(float(keff) - self.target)
+                    sigmas.append(float(sdev)**2)
+                k_crit = fun[-1] + self.target
+                angle = thetas[-1]
+            else:
+                while (abs(fun[-1]) > self.err_tol or abs(thetas[-1] - thetas[-2]) > self.var_tol) and iteration < 6:
+                    iteration += 1
+
+                    thetas.append(self.regressive_secant(thetas,fun))
+                    if iteration < 4:
+                        self.write_serpent(thetas[-1],self.particles/10,config=config)
+                    else:
+                        self.write_serpent(thetas[-1],self.particles,config=config)
+                    self.run_serpent()
+                    keff, sdev = self.get_eigenvalue()
+
+                    fun.append(float(keff) - self.target)
+                k_crit = fun[-1] + self.target
+                angle = thetas[-1]
+            
+            return [k_max, k_min, k_crit, angle]
         else:
-            while (abs(fun[-1]) > self.err_tol or abs(thetas[-1] - thetas[-2]) > self.var_tol) and iteration < 6:
-                iteration += 1
-
-                thetas.append(self.regressive_secant(thetas,fun))
-                if iteration < 4:
-                    self.write_serpent(thetas[-1],self.particles/10,config=config)
-                else:
-                    self.write_serpent(thetas[-1],self.particles,config=config)
-                self.run_serpent()
-                keff, sdev = self.get_eigenvalue()
-
-                fun.append(float(keff) - self.target)
-            k_crit = fun[-1] + self.target
-            angle = thetas[-1]
-        
-        return [k_max, k_min, k_crit, angle]
+            y = self.xbounds
+            f = [self.target - function(y[0]),self.target - function(y[1])]
+            while abs(f[-1] - self.target) > self.err_tol:
+                val = self.regressive_secant(y,f)
+                y.append(val)
+                f.append(self.target - function(y[-1]))
+            return y
 
     def regressive_secant(self,xs,fs):    
         """Conducts a regressive secant evaluation to find next search value.
@@ -500,4 +510,12 @@ problem.pillage()
 test = Pillager()
 test.output_dir = '../../tests/util_data/'
 test.write_serpent(1000,1e9,'initial')
+
+problem = Pillager()
+problem.target = 0.5
+problem.err_tol = 1e-3
+problem.xbounds = [-5,5]
+problem.retained_values = 3
+function = lambda x: x**3 - 2
+print(function(problem.run_search(None,function)[-1]))
 '''

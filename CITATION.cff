@@ -1,1 +1,9 @@
-
+@software{williamsqPillager2025,
+  author = {Quinton Williams},
+  doi = {10.5281/zenodo.15060907},
+  month = {3},
+  title = {{pillager}},
+  url = {https://github.com/Quintonjw97/pillager},
+  version = {0.0.2},
+  year = {2025}
+}

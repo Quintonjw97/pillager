@@ -1,9 +1,11 @@
-@software{williamsqPillager2025,
-  author = {Williams, Quinton},
-  doi = {10.5281/zenodo.15060907},
-  month = {3},
-  title = {{pillager}},
-  url = {https://github.com/Quintonjw97/pillager},
-  version = {0.0.2},
-  year = {2025}
-}
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Williams"
+  given-names: "Quinton"
+  orcid: "https://orcid.org/0009-0006-2653-2189"
+title: "pillager"
+version: 0.0.2
+doi: 10.5281/zenodo.15060907
+date-released: 2025-03-20
+url: "https://github.com/Quintonjw97/pillager"

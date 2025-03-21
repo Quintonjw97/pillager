@@ -415,7 +415,7 @@ class Pillager():
 
         """
         with open(self.output_dir + self.input_base,'r', encoding='utf-8') as f, open(self.output_dir + self.control_base,'r', encoding='utf-8') as c:
-            with open('serpent.i','w', encoding='utf-8') as n:
+            with open(self.output_dir + 'serpent.i','w', encoding='utf-8') as n:
                 for line in f:
                     n.write(line)
                 for line in c:
@@ -425,7 +425,7 @@ class Pillager():
                 n.write('set opti 3 \n')
                 n.write('set nbuf 100 \n')
                 n.write('set memfrac 0.9 \n')
-        with open('serpent.i','a', encoding='utf-8') as n:
+        with open(self.output_dir + 'serpent.i','a', encoding='utf-8') as n:
             if config == 'initial':
                 pass
             elif config == 'initialBurn':

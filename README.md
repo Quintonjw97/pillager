@@ -15,6 +15,7 @@ By providing a base Serpent input file for the reactor and a separate file conta
 To install, clone this repository and pip install as follows:
 ```
 git clone https://github.com/Quintonjw97/pillager.git
+cd pillager
 pip install .
 ```
 

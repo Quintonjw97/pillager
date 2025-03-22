@@ -20,20 +20,14 @@ pip install .
 
 ## [Documentation](https://quintonjw97.github.io/pillager/)
 
-## Example Value Search Problem
+## Example Criticality Search-Burnup Problem
 
-The Pillager class contains various functions that are used to automatically conduct the coupled search-burnup task, but these functions can also be used individually. Below is an example of a generic value search using the <i>regressive_secant()</i> function within an established class object.
-
+The Pillager class contains various functions that are used to automatically conduct the coupled search-burnup task. Below is an example of a basic coupled criticality search-burnup script.
 ```
 import pillager.pillager as pg
 
 problem = pg.Pillager()
-target = 1
-y = [-1,1]
-f = [target - np.exp(y[0]),target - np.exp(y[1])]
-while abs(f[-1] - target) > problem.err_tol:
-    val = obj.regressive_secant(y,f)
-    y.append(val)
-    f.append(target - np.exp(y[-1]))
+problem.blacklist_dir_files()
+problem.pillage()
 ```
-This will converge to the target value for the given function <i>exp(x)</i> within the default error tolerance (1e-5). The final value in list <i>y</i> is the converged answer.
+An instance of the Pillager class is created first, then the blacklist_dir_files() function should be called to prevent any files in the working directory from being moved, as the pillage() function will move generated Serpent inputs and outputs into folders corresponding to their burnup step. The code above will use the default settings for various Serpent input parameters, though the user can manually designate some values (see documentation).

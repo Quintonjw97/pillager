@@ -30,4 +30,25 @@ problem = pg.Pillager()
 problem.blacklist_dir_files()
 problem.pillage()
 ```
-An instance of the Pillager class is created first, then the blacklist_dir_files() function should be called to prevent any files in the working directory from being moved, as the pillage() function will move generated Serpent inputs and outputs into folders corresponding to their burnup step. The code above will use the default settings for various Serpent input parameters, though the user can manually designate some values (see documentation).
+An instance of the Pillager class is created first, then the blacklist_dir_files() function should be called to prevent any files in the working directory from being moved, as the pillage() function will move generated Serpent inputs and outputs into folders corresponding to their burnup step. The code above will use the default settings for various Serpent input parameters, though the user can manually designate some values (see documentation). At a minimum, two input files are required to be in your working directory for the problem to successfully execute. One should contain the Serpent geometry lines corresponding to the control surfaces which will be manipulated. They will need to be modified like the example below:
+```
+# Original Serpent formatting
+surf 94 pad 0.0 0.0 14.0 15.0 300.0+180 60.0+180
+
+# Modified version
+surf 94 pad 0.0 0.0 14.0 15.0 {300.0+180-x} {60.0+180-x} 
+```
+The other file should contain the remainder of the Serpent input lines, with the exception of the following settings:
+```
+set pop
+set bc
+set opti
+set nbuf
+set memfrac
+set mcvol
+set rfw
+set rfr
+set depout
+set printm
+dep
+```
